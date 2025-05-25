@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AccessDenied.swift
 //  AccessDenied
 //
 //  Created by Eugene Kovs on 25.05.2025.
