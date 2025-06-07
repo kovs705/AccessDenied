@@ -11,12 +11,10 @@ import SwiftUI
 struct RedactedPrivacyViewModifier: ViewModifier {
     
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.screenshotDetector) private var screenshotDetector
     
     func body(content: Content) -> some View {
         content
-            .redacted(reason: (scenePhase == .active && !screenshotDetector.isTakingScreenshot) ? .init() : .placeholder)
+            .redacted(reason: scenePhase == .active ? .init() : .placeholder)
             .animation(.default, value: scenePhase)
-            .animation(.default, value: screenshotDetector.isTakingScreenshot)
     }
 }

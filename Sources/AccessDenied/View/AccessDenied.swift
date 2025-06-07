@@ -32,6 +32,17 @@ public extension View {
                 self
             }
         }
-        
+    }
+    
+    /// Prevents screenshots and screen recordings of the view
+    /// - Parameters:
+    ///   - isEnabled: Whether to enable screenshot prevention
+    ///   - mask: The view to show when a screenshot is attempted
+    @ViewBuilder func preventScreenshot<Mask: View>(_ isEnabled: Bool = true, @ViewBuilder withMask mask: () -> Mask) -> some View {
+        if isEnabled {
+            ScreenshotPreventView(content: self, mask: mask())
+        } else {
+            self
+        }
     }
 }
