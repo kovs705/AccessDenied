@@ -27,7 +27,7 @@ struct ScreenshotDetectorViewModifier: ViewModifier {
 }
 
 @available(iOS 17.0, *)
-extension View {
+public extension View {
     func detectScreenshots() -> some View {
         modifier(ScreenshotDetectorViewModifier())
     }
