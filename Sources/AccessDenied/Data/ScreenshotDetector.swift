@@ -13,19 +13,25 @@ class ScreenshotDetector: ObservableObject {
     @Published var isTakingScreenshot = false
     
     init() {
+        #if os(iOS)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(screenshotTaken),
             name: UIApplication.userDidTakeScreenshotNotification,
             object: nil
         )
+        #endif
     }
     
     @objc private func screenshotTaken() {
-        isTakingScreenshot = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            guard let self else { return }
-            isTakingScreenshot = false
+        DispatchQueue.main.async {
+            self.isTakingScreenshot = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                guard let self else { return }
+                isTakingScreenshot = false
+            }
         }
     }
 }
+
+
