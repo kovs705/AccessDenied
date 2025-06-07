@@ -8,30 +8,28 @@
 
 import SwiftUI
 import UIKit
+import Combine
 
 class ScreenshotDetector: ObservableObject {
     @Published var isTakingScreenshot = false
+    private var cancellables = Set<AnyCancellable>()
     
     init() {
         #if os(iOS)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(screenshotTaken),
-            name: UIApplication.userDidTakeScreenshotNotification,
-            object: nil
-        )
+        NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.isTakingScreenshot = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    guard let self else { return }
+                    isTakingScreenshot = false
+                }
+            }
+            .store(in: &cancellables)
         #endif
     }
     
-    @objc private func screenshotTaken() {
-        DispatchQueue.main.async {
-            self.isTakingScreenshot = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-                guard let self else { return }
-                isTakingScreenshot = false
-            }
-        }
+    deinit {
+        cancellables.removeAll()
     }
 }
-
-
