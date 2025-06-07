@@ -11,6 +11,7 @@ import SwiftUI
 struct CustomColorPrivacyViewModifier: ViewModifier {
     
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.screenshotDetector) private var screenshotDetector
     var color: Color
     var cornerRadius: CGFloat
     
@@ -18,9 +19,10 @@ struct CustomColorPrivacyViewModifier: ViewModifier {
         content
             .overlay {
                 color
-                    .opacity(scenePhase != .active ? 1 : 0)
+                    .opacity((scenePhase != .active || screenshotDetector.isTakingScreenshot) ? 1 : 0)
                     .clipShape(.rect(cornerRadius: cornerRadius))
             }
             .animation(.default, value: scenePhase)
+            .animation(.default, value: screenshotDetector.isTakingScreenshot)
     }
 }

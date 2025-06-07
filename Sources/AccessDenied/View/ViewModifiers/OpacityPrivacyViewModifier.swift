@@ -11,10 +11,12 @@ import SwiftUI
 struct OpacityPrivacyViewModifier: ViewModifier {
     
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.screenshotDetector) private var screenshotDetector
     
     func body(content: Content) -> some View {
         content
-            .opacity(scenePhase != .active ? 0 : 1)
+            .opacity((scenePhase == .active && !screenshotDetector.isTakingScreenshot) ? 1 : 0)
             .animation(.default, value: scenePhase)
+            .animation(.default, value: screenshotDetector.isTakingScreenshot)
     }
 }

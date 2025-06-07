@@ -10,11 +10,13 @@ import SwiftUI
 
 struct BlurPrivacyViewModifier: ViewModifier {
     
-    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.screenshotDetector) private var screenshotDetector
     
     func body(content: Content) -> some View {
         content
-            .blur(radius: scenePhase != .active ? 5 : 0)
+            .blur(radius: (scenePhase != .active || screenshotDetector.isTakingScreenshot) ? 5 : 0)
             .animation(.default, value: scenePhase)
+            .animation(.default, value: screenshotDetector.isTakingScreenshot)
     }
 }
