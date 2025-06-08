@@ -9,6 +9,9 @@
 import UIKit
 
 extension UIView {
+    /// Makes the view fill its superview by setting up constraints to all edges.
+    /// This method sets up constraints to match the view's frame to its superview's bounds.
+    /// If the view has no superview, this method does nothing.
     func fillToSuperview() {
         guard let superview else {
             return
